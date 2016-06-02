@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RadialGradient;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 
 import dk.simonsteinaa.framework.interfaces.Graphics;
@@ -57,9 +59,14 @@ public class GameGraphics implements Graphics {
 
     @Override
     public void drawCircle(int x, int y, int radius, int color) {
+        RadialGradient gradient = new RadialGradient(x, y, radius - 5, 0xffffffff,
+                color, Shader.TileMode.CLAMP);
         paint.setColor(color);
-        paint.setStyle(Paint.Style.FILL);
+        paint.setDither(true);
+        paint.setShader(gradient);
+        //paint.setStyle(Paint.Style.FILL);
         canvas.drawCircle(x, y, radius, paint);
+        paint.setShader(null);
     }
 
     @Override

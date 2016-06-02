@@ -1,6 +1,7 @@
 package dk.simonsteinaa.connect4.screens;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ class BottomHit {
         this.column = column;
     }
 }
+
 // helper class to hold info about player info to display
 class PlayerObject {
     public String name;
@@ -39,6 +41,7 @@ public class Board {
     private int numberOfColumns;
     private int pieceWidth;
     private int pieceHeight;
+    private int yOffset = 4;
 
     // the pieces currently on the field
     private List<List<Piece>> pieces;
@@ -61,6 +64,16 @@ public class Board {
         this.numberOfColumns = columns;
         this.pieceWidth = width / columns;
         this.pieceHeight = height / rows;
+
+        Log.i("width", "" + width );
+        Log.i("height", "" + height );
+        Log.i("rows", "" + rows );
+        Log.i("columns", "" + columns );
+        Log.i("pieceWidth", "" + pieceWidth );
+        Log.i("pieceHeight", "" + pieceHeight );
+
+
+
 
         reset();
     }
@@ -123,11 +136,13 @@ public class Board {
     // the animation will make it fall to the bottom
     public void placeToken(int column, int color) {
         // place the y-coord half a height above - to show that it is falling
+
         pieces.get(column).add(
                 new Piece(graphics, column * pieceWidth, 0 - pieceHeight / 2,
-                        2, 3,
+                        200, 500,
                         this.pieceWidth, this.pieceHeight, color)
         );
+        Log.i("placing token at x:", "" + column * pieceWidth );
     }
 
     ;
@@ -136,13 +151,21 @@ public class Board {
     public void draw() {
         graphics.clear(Color.BLACK);
 
-        //context.strokeStyle = "gray";
+
 
         // this draws the vertical columns
-        for (int column = 0; column < numberOfColumns; column++) {
-            graphics.drawLine(column * pieceWidth, 0, column * this.pieceWidth, this.height, Color.GRAY);
+        for (int column = 1; column < numberOfColumns; column++) {
 
+            for (int a = yOffset / 2 - yOffset; a < yOffset / 2; a++)
+                //canvas.drawLine(mainColumnSize-2, 0, mainColumnSize-2, height, paint);
+                graphics.drawLine(column * pieceWidth + a, 0, column * this.pieceWidth + a, this.height, Color.GRAY);
         }
+
+        graphics.drawLine(0, height-3, width, height - 3, Color.GRAY);
+        graphics.drawLine(0, height-2, width, height - 2, Color.GRAY);
+        graphics.drawLine(0, height-1, width, height - 1, Color.GRAY);
+
+
 
         // this draws the pieces
         for (int column = 0; column < numberOfColumns; column++) {
@@ -158,27 +181,27 @@ public class Board {
             //context.fillStyle = this.waitingForOpponent.color;
             //context.font = "40px Comic Sans MS";
 
-            graphics.drawText(this.width / 2, this.height / 4, "Waiting for " + waitingForOpponent.name, waitingForOpponent.color, 14);
+            graphics.drawText(this.width / 2, this.height / 4, "Waiting... ", waitingForOpponent.color, height / 25);
 
 
         } else if (winnerFound != null) { // or draw a winner message
-                if (!winnerFound.name.equals("Stalemate") ) {
-                    graphics.drawText(this.width/2, this.height/4, this.winnerFound.name + " wins!", winnerFound.color, 14);
+            if (!winnerFound.name.equals("Stalemate")) {
+                graphics.drawText(this.width / 2, this.height / 4, this.winnerFound.name + " wins!", winnerFound.color, height / 25);
 
-                } else {
-                    graphics.drawText(this.width/2, this.height/4, this.winnerFound.name + " wins!", Color.WHITE, 14);
-                }
-                graphics.drawText(this.width/2, this.height/2, "Touch again to play a new game!", Color.GRAY, 14);
+            } else {
+                graphics.drawText(this.width / 2, this.height / 4, this.winnerFound.name + " wins!", Color.WHITE, height / 25);
+            }
+            graphics.drawText(this.width / 2, this.height / 2, "Touch again to play a new game!", Color.GRAY, height / 25);
         }
 
     }
 
-    public void update() {
+    public void update(float deltaTime) {
         for (int column = 0; column < numberOfColumns; column++) {
             for (int p = 0; p < pieces.get(column).size(); p++) {
                 Piece nextPiece = pieces.get(column).get(p);
                 // do the calculation of the physics
-                nextPiece.update();
+                nextPiece.update(deltaTime);
                 // when we have hit the bottom of a column
                 if (nextPiece.isFalling() && nextPiece.getY() > bottom.get(column)) {
 

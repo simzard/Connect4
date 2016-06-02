@@ -14,7 +14,7 @@ public class SocketHandler  {
 
     public void connect() {
         try {
-            socket = IO.socket("http://simonsteinaa.pagekite.me");
+            socket = IO.socket("http://7d12fa2a.ngrok.io/");
         } catch (URISyntaxException e) {
             System.out.println("No connection!");
             //e.printStackTrace();
