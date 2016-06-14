@@ -20,12 +20,9 @@ public class SingleTouchHandler implements TouchHandler {
     int touchX;
     int touchY;
     Pool<TouchEvent> touchEventPool;
-    List<TouchEvent> touchEvents = new ArrayList<TouchEvent>();
     List<TouchEvent> touchEventsBuffer = new ArrayList<TouchEvent>();
-    float scaleX;
-    float scaleY;
 
-    public SingleTouchHandler(View view, float scaleX, float scaleY) {
+    public SingleTouchHandler(View view) {
         PoolObjectFactory<TouchEvent> factory =  new PoolObjectFactory<TouchEvent>() {
             @Override
             public TouchEvent createObject() {
@@ -34,8 +31,6 @@ public class SingleTouchHandler implements TouchHandler {
         };
         touchEventPool =  new Pool <TouchEvent> (factory, 100);
         view.setOnTouchListener(this);
-        this.scaleX = scaleX;
-        this.scaleY = scaleY;
     }
 
     @Override
@@ -63,19 +58,6 @@ public class SingleTouchHandler implements TouchHandler {
     }
 
     @Override
-    public List<TouchEvent> getTouchEvents() {
-        synchronized(this) {
-            int len = touchEvents.size();
-            for( int i = 0; i < len; i++ )
-                touchEventPool.free(touchEvents.get(i));
-            touchEvents.clear();
-            touchEvents.addAll(touchEventsBuffer);
-            touchEventsBuffer.clear();
-            return touchEvents;
-        }
-    }
-
-    @Override
     public boolean onTouch(View view, MotionEvent event) {
         synchronized(this) {
             TouchEvent touchEvent = touchEventPool.newObject();
@@ -94,10 +76,11 @@ public class SingleTouchHandler implements TouchHandler {
                     isTouched =  false;
                     break;
             }
-            touchEvent.x = touchX = (int)(event.getX() * scaleX);
-            touchEvent.y = touchY = (int)(event.getY() * scaleY);
+            touchEvent.x = touchX = (int)(event.getX());
+            touchEvent.y = touchY = (int)(event.getY());
             touchEventsBuffer.add(touchEvent);
             return true;
         }
     }
+
 }

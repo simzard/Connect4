@@ -1,7 +1,5 @@
 package dk.simonsteinaa.connect4.screens;
 
-import android.graphics.Color;
-
 import dk.simonsteinaa.framework.interfaces.Graphics;
 
 /**
@@ -9,7 +7,6 @@ import dk.simonsteinaa.framework.interfaces.Graphics;
  */
 public class Piece {
     protected boolean falling = true;
-    protected int column;
     protected int x;
     protected int y;
     protected float gravity;
@@ -44,7 +41,6 @@ public class Piece {
         this.y = y;
     }
 
-
     public int getY() {
         return y;
     }
@@ -52,10 +48,6 @@ public class Piece {
     // just draw a circle in the center of the x,y point
     // (which is always the top left in the piece rectangle pieceWidth * pieceHeight)
     public void draw() {
-
-        //int circleRadiusHorz = height / 2;
-        //int centerX = x + circleRadiusHorz;
-        //int centerY = y + circleRadiusHorz;
         int centerX = (int)(x + 0.5 * width);
         int centerY = (int)(y + 0.5 * height);
         //graphics.drawCircle(centerX, centerY, width / 2 - width / 9, color);
@@ -69,11 +61,9 @@ public class Piece {
             this.y += this.vy * deltaTime;
             this.vy += this.gravity;
         } else {
-            // this piece is not falling - just make it's accleration and speed zero
+            // this piece is not falling - just make it's acceleration and speed zero
             this.vy = 0;
             this.gravity = 0;
         }
     };
-
-
 }

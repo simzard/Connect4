@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Pool < T > {
     public interface PoolObjectFactory < T > {
-        public T createObject();
+        T createObject();
     }
 
     private final List < T > freeObjects;
@@ -23,7 +23,7 @@ public class Pool < T > {
     }
 
     public T newObject() {
-        T object =  null;
+        T object;
         if (freeObjects.isEmpty())
             object = factory.createObject();
         else

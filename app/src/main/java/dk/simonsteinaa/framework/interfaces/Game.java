@@ -4,15 +4,17 @@ package dk.simonsteinaa.framework.interfaces;
  * Created by simon on 4/24/16.
  */
 public interface Game {
-    public Input getInput();
+    Input getInput();
 
-    public Graphics getGraphics();
+    Graphics getGraphics();
 
-    public void setScreen(Screen screen);
+    void setScreen(Screen screen);
 
-    public Screen getCurrentScreen();
+    Screen getCurrentScreen();
 
-    public Screen getStartScreen();
+    Screen getStartScreen();
 
-    public boolean getMessageFromScreen();
+    boolean getMessageFromScreen();
+
+    Sockets getSockets();
 }

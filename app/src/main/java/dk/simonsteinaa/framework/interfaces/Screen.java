@@ -1,7 +1,5 @@
 package dk.simonsteinaa.framework.interfaces;
 
-import org.json.JSONException;
-
 /**
  * Created by simon on 4/24/16.
  */

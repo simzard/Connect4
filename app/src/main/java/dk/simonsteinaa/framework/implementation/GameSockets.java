@@ -1,23 +1,22 @@
-package dk.simonsteinaa.connect4.utilities;
+package dk.simonsteinaa.framework.implementation;
 
 import java.net.URISyntaxException;
 
+import dk.simonsteinaa.framework.interfaces.Sockets;
 import io.socket.client.IO;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 /**
  * Created by simon on 5/1/16.
  */
-public class SocketHandler  {
+public class GameSockets implements Sockets {
     private Socket socket;
 
     public void connect() {
         try {
-            socket = IO.socket("http://7d12fa2a.ngrok.io/");
+            socket = IO.socket("http://connect4-ssteinaa.rhcloud.com");
         } catch (URISyntaxException e) {
-            System.out.println("No connection!");
-            //e.printStackTrace();
+           e.printStackTrace();
         }
 
         socket.connect();
@@ -27,5 +26,4 @@ public class SocketHandler  {
     public Socket getSocket() {
         return socket;
     }
-
 }

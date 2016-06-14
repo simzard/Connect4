@@ -3,8 +3,6 @@ package dk.simonsteinaa.framework.implementation;
 import android.content.Context;
 import android.view.View;
 
-import java.util.List;
-
 import dk.simonsteinaa.framework.interfaces.Input;
 import dk.simonsteinaa.framework.interfaces.TouchHandler;
 
@@ -14,8 +12,8 @@ import dk.simonsteinaa.framework.interfaces.TouchHandler;
 public class GameInput implements Input {
     private TouchHandler touchHandler;
 
-    public GameInput(Context context, View view, float scaleX, float scaleY) {
-        touchHandler =  new SingleTouchHandler(view, scaleX, scaleY);
+    public GameInput(Context context, View view) {
+        touchHandler =  new SingleTouchHandler(view);
     }
 
     @Override
@@ -33,8 +31,4 @@ public class GameInput implements Input {
         return touchHandler.getTouchY(pointer);
     }
 
-    @Override
-    public List<TouchEvent> getTouchEvents() {
-        return touchHandler.getTouchEvents();
-    }
 }

@@ -12,14 +12,14 @@ import dk.simonsteinaa.framework.interfaces.Game;
 /**
  * Created by simon on 4/24/16.
  */
-public class FastRenderView extends SurfaceView implements Runnable {
+public class ThreadedRenderView extends SurfaceView implements Runnable {
     private GameController gameController;
     private Bitmap framebuffer;
     private Thread renderThread = null;
     private SurfaceHolder holder;
     private volatile boolean running = false;
 
-    public FastRenderView(GameController gameController, Bitmap framebuffer) {
+    public ThreadedRenderView(GameController gameController, Bitmap framebuffer) {
         super(gameController);
         this.gameController = gameController;
         this.framebuffer = framebuffer;

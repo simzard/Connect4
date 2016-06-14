@@ -1,11 +1,11 @@
 package dk.simonsteinaa.connect4.screens;
 
 import android.graphics.Color;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.simonsteinaa.connect4.utilities.Utils;
 import dk.simonsteinaa.framework.interfaces.Graphics;
 
 /**
@@ -37,7 +37,7 @@ public class Board {
     private Graphics graphics;
     private int width;
     private int height;
-    private int numberOfRows;
+
     private int numberOfColumns;
     private int pieceWidth;
     private int pieceHeight;
@@ -60,20 +60,9 @@ public class Board {
         this.graphics = graphics;
         this.width = width;
         this.height = height;
-        this.numberOfRows = rows;
         this.numberOfColumns = columns;
         this.pieceWidth = width / columns;
         this.pieceHeight = height / rows;
-
-        Log.i("width", "" + width );
-        Log.i("height", "" + height );
-        Log.i("rows", "" + rows );
-        Log.i("columns", "" + columns );
-        Log.i("pieceWidth", "" + pieceWidth );
-        Log.i("pieceHeight", "" + pieceHeight );
-
-
-
 
         reset();
     }
@@ -107,9 +96,6 @@ public class Board {
         waitingForOpponent = null;
         winnerFound = null;
 
-        //waitingForOpponent = new PlayerObject("Hulla Bulla", Color.MAGENTA);
-        //winnerFound = new PlayerObject("Simon the Sorcerer", Color.YELLOW);
-
         // the board - divided into NUMBER_OF_COLUMNS subarrays - one for each column
         this.pieces = new ArrayList<>();
         for (int column = 0; column < numberOfColumns; column++) {
@@ -123,14 +109,10 @@ public class Board {
         }
     }
 
-    ;
-
     // raise the bottom one "level" higher for a specific column
     public void raiseBottomOneLevel(int column) {
         bottom.set(column, bottom.get(column) - this.pieceHeight);
     }
-
-    ;
 
     // place the token at the given column at it's initial top position
     // the animation will make it fall to the bottom
@@ -142,30 +124,22 @@ public class Board {
                         200, 500,
                         this.pieceWidth, this.pieceHeight, color)
         );
-        Log.i("placing token at x:", "" + column * pieceWidth );
+
     }
-
-    ;
-
 
     public void draw() {
         graphics.clear(Color.BLACK);
-
-
 
         // this draws the vertical columns
         for (int column = 1; column < numberOfColumns; column++) {
 
             for (int a = yOffset / 2 - yOffset; a < yOffset / 2; a++)
-                //canvas.drawLine(mainColumnSize-2, 0, mainColumnSize-2, height, paint);
                 graphics.drawLine(column * pieceWidth + a, 0, column * this.pieceWidth + a, this.height, Color.GRAY);
         }
 
         graphics.drawLine(0, height-3, width, height - 3, Color.GRAY);
         graphics.drawLine(0, height-2, width, height - 2, Color.GRAY);
         graphics.drawLine(0, height-1, width, height - 1, Color.GRAY);
-
-
 
         // this draws the pieces
         for (int column = 0; column < numberOfColumns; column++) {
@@ -174,24 +148,25 @@ public class Board {
             }
         }
 
-
         // draw a waiting message if waiting for opponent
         if (this.waitingForOpponent != null) {
 
-            //context.fillStyle = this.waitingForOpponent.color;
-            //context.font = "40px Comic Sans MS";
-
-            graphics.drawText(this.width / 2, this.height / 4, "Waiting... ", waitingForOpponent.color, height / 25);
+            graphics.drawText(this.width / 2, this.height / 4, "Waiting for " + waitingForOpponent.name, Utils.TEXT_SHADE, height / 20);
+            graphics.drawText(this.width / 2-Utils.TEXT_OFFSET, this.height / 4-Utils.TEXT_OFFSET, "Waiting for " + waitingForOpponent.name, waitingForOpponent.color, height / 20);
 
 
         } else if (winnerFound != null) { // or draw a winner message
+
             if (!winnerFound.name.equals("Stalemate")) {
-                graphics.drawText(this.width / 2, this.height / 4, this.winnerFound.name + " wins!", winnerFound.color, height / 25);
+                graphics.drawText(this.width / 2, this.height / 4, this.winnerFound.name + " wins!", Utils.TEXT_SHADE, height / 20);
+                graphics.drawText(this.width / 2-Utils.TEXT_OFFSET, this.height / 4-Utils.TEXT_OFFSET, this.winnerFound.name + " wins!", winnerFound.color, height / 20);
 
             } else {
-                graphics.drawText(this.width / 2, this.height / 4, this.winnerFound.name + " wins!", Color.WHITE, height / 25);
+                graphics.drawText(this.width / 2, this.height / 4, "It was a draw!", Utils.TEXT_SHADE, height / 20);
+                graphics.drawText(this.width / 2-Utils.TEXT_OFFSET, this.height / 4-Utils.TEXT_OFFSET, "It was a draw!", Color.YELLOW, height / 20);
             }
-            graphics.drawText(this.width / 2, this.height / 2, "Touch again to play a new game!", Color.GRAY, height / 25);
+            graphics.drawText(this.width / 2, this.height / 2, "Push buttons to play a new game!", Utils.TEXT_SHADE, height / 20);
+            graphics.drawText(this.width / 2-Utils.TEXT_OFFSET, this.height / 2-Utils.TEXT_OFFSET, "Push buttons to play a new game!", Color.WHITE, height / 20);
         }
 
     }
@@ -206,7 +181,6 @@ public class Board {
                 if (nextPiece.isFalling() && nextPiece.getY() > bottom.get(column)) {
 
                     // we already have the column - calculate the row as well
-                    //var row = NUMBER_OF_ROWS - (2 + bottom[this.column] / PIECE_HEIGHT);
                     int row = bottom.get(column) / this.pieceHeight;
 
                     // set the hit attribute
@@ -215,11 +189,11 @@ public class Board {
                     // freeze the piece at this position
                     nextPiece.setY(bottom.get(column));
                     nextPiece.setFalling(false);
+
                     // now move the bottom one up
                     this.raiseBottomOneLevel(column);
                 }
             }
         }
     }
-
 }
